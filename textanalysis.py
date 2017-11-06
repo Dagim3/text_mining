@@ -70,29 +70,6 @@ def most_common(hist):
     t.reverse()
     return t
 
-
-def print_most_common(hist, num):
-    """Prints the most commons words in a histgram and their frequencies.
-    hist: histogram (map from word to frequency)
-    num: number of words to print
-    """
-    t = most_common(hist)
-    print('The most common words are:')
-    for freq, word in t[:num]:
-        print(word, '\t', freq)
-
-
-def subtract(d1, d2):
-    """Returns a dictionary with all keys that appear in d1 but not d2.
-    d1, d2: dictionaries
-    """
-    res = {}
-    for key in d1:
-        if key not in d2:
-            res[key] = None
-    return res
-
-
 def random_word(hist):
     """Chooses a random word from a histogram.
     The probability of each word is proportional to its frequency.
@@ -104,18 +81,27 @@ def random_word(hist):
     return random.choice(t)
 
 def wordcount(filename):
-    chars = []
+    count = 0
     with open(filename, "r") as f:
-        for c in f.read():
-            chars.append(c)
-    num_chars = len(chars)
-    print (num_chars)
+        for char in f.read():
+            count += 1
+    return count
 
+def sentiment(filename):
+    with open(filename, 'r') as myfile:
+        data=myfile.read().replace('\n', '')
+    score = SentimentIntensityAnalyzer().polarity_scores(data)
+    print (score)
 
 def main():
     hist = process_file('secretgarden.txt', skip_header=True)
     print('Total number of words:', total_words(hist))
     print('Number of different words:', different_words(hist))
+
+    print(sentiment('secretgarden.txt'))    
+
+    a = int(((wordcount('secretgarden.txt'))/total_words(hist)))
+    print ('The average letters in a word is', a)
 
     t = most_common(hist)
     print('The most common words are:')
@@ -127,14 +113,11 @@ def main():
     for freq, word in t[0:20]:
         print(word, '\t', len(word))
     
-    print ('The average letters in a word is', wordcount('secretgarden.txt')/(total_words(hist))
-    
+    a = int(((wordcount('secretgarden.txt'))/total_words(hist)))
+    print ('The average letters in a word is', a)
     print ("\n\nHere are some random words from the book")
     for i in range(100):
         print(random_word(hist), end=' ')
-
-    score = SentimentIntensityAnalyzer().polarity_scores(hist)
-    print(score)
 
 if __name__ == '__main__':
     main()
@@ -176,6 +159,11 @@ def main():
     hist = process_file('secretgardenwiki.txt')
     print('Total number of words:', total_words(hist))
     print('Number of different words:', different_words(hist))
+
+    print(sentiment('secretgardenwiki.txt'))    
+
+    a = int(((wordcount('secretgardenwiki.txt'))/total_words(hist)))
+    print ('The average letters in a word is', a)
 
     t = most_common(hist)
     print('The most common words are:')
@@ -237,6 +225,11 @@ def main():
     print('Total number of words:', total_words(hist))
     print('Number of different words:', different_words(hist))
 
+    print(sentiment('ulysses.txt'))    
+
+    a = int(((wordcount('ulysses.txt'))/total_words(hist)))
+    print ('The average letters in a word is', a)
+
     t = most_common(hist)
     print('The most common words are:')
     for freq, word in t[0:20]:
@@ -292,6 +285,11 @@ def main():
     print('Total number of words:', total_words(hist))
     print('Number of different words:', different_words(hist))
 
+    print(sentiment('ulysses_wiki.txt'))     
+
+    a = int(((wordcount('ulysses_wiki.txt'))/total_words(hist)))
+    print ('The average letters in a word is', a)
+    
     t = most_common(hist)
     print('The most common words are:')
     for freq, word in t[0:20]:
@@ -303,7 +301,6 @@ def main():
         print(word, '\t', len(word))
     length = sum(len(word) for word in t[0:20])
     print ('The total amount of letters in the 20 most common words is', length)
-
 
     print("\n\nHere are some random words from the Wikipedia Page:")
     for i in range(100):
